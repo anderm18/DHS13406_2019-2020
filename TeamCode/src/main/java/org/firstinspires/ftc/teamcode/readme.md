@@ -1,3 +1,8 @@
+
+//This Readme file will display text on our GitHub page
+//Feel free to edit it however you want to get used to pushing, pulling, and commiting on GitHub Desktop -Mikey
+
+
 ## TeamCode Module
 
 Welcome!
