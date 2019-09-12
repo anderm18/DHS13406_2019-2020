@@ -14,6 +14,7 @@ public class Drive extends OpMode
     private DcMotor leftBack = null;
     private DcMotor rightBack = null;
 
+
     //Once the START Button is pressed
     @Override
     public void init() {
@@ -21,11 +22,14 @@ public class Drive extends OpMode
 
         leftFront  = hardwareMap.get(DcMotor.class, "leftFront");
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
-
+        leftBack = hardwareMap.get(DcMotor.class, "leftback");
+        rightBack = hardwareMap.get(DcMotor.class, "rightBack");
 
 
         leftFront.setDirection(DcMotor.Direction.FORWARD);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
+        leftBack.setDirection(DcMotor.Direction.FORWARD);
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
 
     }
 
