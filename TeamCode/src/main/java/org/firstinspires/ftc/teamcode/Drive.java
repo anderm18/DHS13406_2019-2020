@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.Range;
+
 
 @TeleOp(name="Drive", group="1")
 public class Drive extends OpMode
@@ -47,18 +47,23 @@ public class Drive extends OpMode
     @Override
     public void loop() {
 
+        //It gets a little complex here, as we get into to Trigonometry
+        double hyp = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+        //Above finds the Hypotenuse (the long side of a triangle) of the values of the x joystick and y joystick.
+        //The Joysticks are set up on an xy plane, meaning vertical gives a y value and horizontal gives an x value
+        double rAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+        double rightX = gamepad1.right_stick_x;
 
-        double leftfrontPower;
-        double rightfrontPower;
+        final double lF = hyp * Math.cos(rAngle) + rightX;
+        final double rF = hyp * Math.sin(rAngle) - rightX;
+        final double lB = hyp * Math.cos(rAngle) + rightX;
+        final double rB = hyp * Math.sin(rAngle) - rightX;
 
-        double drive = -gamepad1.left_stick_y;
-        double turn  =  gamepad1.right_stick_x;
-        leftfrontPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-        rightfrontPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+        leftFront.setPower(lF);
+        rightFront.setPower(rF);
+        leftBack.setPower(lB);
+        rightBack.setPower(rB);
 
-        // Send calculated power to wheels
-        leftFront.setPower(leftfrontPower);
-        rightFront.setPower(rightfrontPower);
 
     }
 
