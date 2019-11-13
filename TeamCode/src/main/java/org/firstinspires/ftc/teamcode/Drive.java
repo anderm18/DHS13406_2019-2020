@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 //package is where your class is stored
 
-import android.os.UserManager;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 //import just imports other classes aka other chunks of code that already have commands/methods written so you dont have to write them
 
 @TeleOp(name="Drive", group="1")
@@ -18,10 +16,10 @@ public class Drive extends OpMode
     private DcMotor rightFront = null;
     private DcMotor leftBack = null;
     private DcMotor rightBack = null;
-    private DcMotor leftIntake = null;
     private DcMotor rightIntake = null;
-    private Servo grabber = null;
-
+    private DcMotor leftIntake = null;
+    private CRServo grabber = null;
+    private DcMotor linearSlides = null;
 
     //Once the START Button is pressed
     @Override
@@ -34,23 +32,20 @@ public class Drive extends OpMode
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
         leftBack = hardwareMap.get(DcMotor.class, "leftBack");
         rightBack = hardwareMap.get(DcMotor.class, "rightBack");
-
-        leftIntake = hardwareMap.get(DcMotor.class, "leftIntake");
         rightIntake = hardwareMap.get(DcMotor.class, "rightIntake");
-
-        grabber = hardwareMap.get(Servo.class, "grabber");
-
-
-
+        leftIntake = hardwareMap.get(DcMotor.class, "leftIntake");
+        grabber = hardwareMap.get(CRServo.class, "grabber");
+        linearSlides = hardwareMap.get(DcMotor.class, "linearSlides");
 
         //set diretion of motors (if left and right always turn clockwise, then the robot will spin, not good)
         leftFront.setDirection(DcMotor.Direction.FORWARD);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setDirection(DcMotor.Direction.FORWARD);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
-
-        leftIntake.setDirection(DcMotor.Direction.FORWARD);
         rightIntake.setDirection(DcMotor.Direction.REVERSE);
+        grabber.setDirection(CRServo.Direction.REVERSE);
+
+
     }
 
     //Code that Loops after the initialize button is pressed (generally don't touch)
@@ -69,18 +64,27 @@ public class Drive extends OpMode
     @Override
     public void loop() {
 
+
         if (gamepad2.x == true){
 
-            grabber.setPosition(Servo.MAX_POSITION);
+            grabber.setPower(1);
         }
 
         if (gamepad2.b == true){
 
-            grabber.setPosition(Servo.MIN_POSITION);
+            grabber.setPower(-1);
+        }
+        else{
+
+            grabber.setPower(0);
         }
 
-        leftIntake.setPower(gamepad2.left_trigger);
-        rightIntake.setPower(gamepad2.right_trigger);
+        linearSlides.setPower(gamepad2.right_trigger);
+        linearSlides.setPower(gamepad2.left_trigger);
+
+        leftIntake.setPower(gamepad1.left_trigger);
+        rightIntake.setPower(gamepad1.right_trigger);
+
 
         //It gets a little complex here, as we get into to Trigonometry
         double hyp = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
