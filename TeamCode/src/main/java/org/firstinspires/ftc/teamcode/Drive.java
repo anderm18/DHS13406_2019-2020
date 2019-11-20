@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-//import just imports other classes aka other chunks of code that already have commands/methods written so you dont have to write them
+import com.qualcomm.robotcore.hardware.Servo;
+//import just imports other classes aka other chunks of code that already have commands/methods written so you don't have to write them
 
 @TeleOp(name="Drive", group="1")
 public class Drive extends OpMode
@@ -18,8 +18,11 @@ public class Drive extends OpMode
     private DcMotor rightBack = null;
     private DcMotor rightIntake = null;
     private DcMotor leftIntake = null;
-    private CRServo grabber = null;
+    private Servo grabber = null;
     private DcMotor linearSlides = null;
+    private DcMotor horizontalSlides = null;
+    private Servo frontServosLeft = null;
+    private Servo frontServosRight = null;
 
     //Once the START Button is pressed
     @Override
@@ -34,8 +37,11 @@ public class Drive extends OpMode
         rightBack = hardwareMap.get(DcMotor.class, "rightBack");
         rightIntake = hardwareMap.get(DcMotor.class, "rightIntake");
         leftIntake = hardwareMap.get(DcMotor.class, "leftIntake");
-        grabber = hardwareMap.get(CRServo.class, "grabber");
+        grabber = hardwareMap.get(Servo.class, "grabber");
         linearSlides = hardwareMap.get(DcMotor.class, "linearSlides");
+        horizontalSlides = hardwareMap.get(DcMotor.class, "horizontalSlides");
+        frontServosLeft = hardwareMap.get(Servo.class, "frontServosLeft");
+        frontServosRight = hardwareMap.get(Servo.class, "frontServosRight");
 
         //set diretion of motors (if left and right always turn clockwise, then the robot will spin, not good)
         leftFront.setDirection(DcMotor.Direction.FORWARD);
@@ -43,8 +49,8 @@ public class Drive extends OpMode
         leftBack.setDirection(DcMotor.Direction.FORWARD);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         rightIntake.setDirection(DcMotor.Direction.REVERSE);
-        grabber.setDirection(CRServo.Direction.REVERSE);
-
+        grabber.setDirection(Servo.Direction.FORWARD);
+        frontServosLeft.setDirection(Servo.Direction.REVERSE);
 
     }
 
@@ -57,6 +63,7 @@ public class Drive extends OpMode
     @Override
     public void start() {
 
+        frontServosRight.resetDeviceConfigurationForOpMode();
         grabber.resetDeviceConfigurationForOpMode();
     }
 
@@ -65,25 +72,38 @@ public class Drive extends OpMode
     public void loop() {
 
 
-        if (gamepad2.x == true){
 
-            grabber.setPower(1);
+        if (gamepad2.right_bumper == true)
+            horizontalSlides.setPower(1);
+        else if (gamepad2.left_bumper == true)
+            horizontalSlides.setPower(-1);
+        else
+            horizontalSlides.setPower(0);
+
+        if (gamepad2.b == true)
+            grabber.setPosition(Servo.MIN_POSITION);
+        else
+            grabber.setPosition(Servo.MAX_POSITION);
+
+
+        if (gamepad2.dpad_up == true)
+            linearSlides.setPower(1);
+        else if (gamepad2.dpad_down == true)
+            linearSlides.setPower(-1);
+        else
+            linearSlides.setPower(0);
+
+        if (gamepad2.a == true) {
+            frontServosLeft.setPosition(Servo.MIN_POSITION);
+            frontServosRight.setPosition(Servo.MIN_POSITION);
+        }
+        else if (gamepad2.y == true) {
+            frontServosLeft.setPosition(.58);
+            frontServosRight.setPosition(Servo.MAX_POSITION/2);
         }
 
-        if (gamepad2.b == true){
-
-            grabber.setPower(-1);
-        }
-        else{
-
-            grabber.setPower(0);
-        }
-
-        linearSlides.setPower(gamepad2.right_trigger);
-        linearSlides.setPower(gamepad2.left_trigger);
-
-        leftIntake.setPower(gamepad1.left_trigger);
-        rightIntake.setPower(gamepad1.right_trigger);
+        leftIntake.setPower(gamepad2.left_trigger);
+        rightIntake.setPower(-gamepad2.right_trigger);
 
 
         //It gets a little complex here, as we get into to Trigonometry
