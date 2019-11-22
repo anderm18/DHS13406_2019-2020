@@ -98,8 +98,8 @@ public class Drive extends OpMode
             frontServosRight.setPosition(Servo.MIN_POSITION);
         }
         else if (gamepad2.y == true) {
-            frontServosLeft.setPosition(.58);
-            frontServosRight.setPosition(Servo.MAX_POSITION/2);
+            frontServosLeft.setPosition(.50);
+            frontServosRight.setPosition(.50);
         }
 
         leftIntake.setPower(gamepad2.left_trigger);
