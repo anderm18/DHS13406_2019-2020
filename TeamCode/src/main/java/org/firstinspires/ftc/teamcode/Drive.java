@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 //import just imports other classes aka other chunks of code that already have commands/methods written so you don't have to write them
 
@@ -23,6 +24,8 @@ public class Drive extends OpMode
     private DcMotor horizontalSlides = null;
     private Servo frontServosLeft = null;
     private Servo frontServosRight = null;
+    //private CRServo intakeAdjust = null;
+    private CRServo intakeAdjustTwo = null;
 
     //Once the START Button is pressed
     @Override
@@ -42,15 +45,25 @@ public class Drive extends OpMode
         horizontalSlides = hardwareMap.get(DcMotor.class, "horizontalSlides");
         frontServosLeft = hardwareMap.get(Servo.class, "frontServosLeft");
         frontServosRight = hardwareMap.get(Servo.class, "frontServosRight");
+        //intakeAdjust = hardwareMap.get(CRServo.class, "intakeAdjust");
+        intakeAdjustTwo = hardwareMap.get(CRServo.class, "intakeAdjustTwo");
+
 
         //set diretion of motors (if left and right always turn clockwise, then the robot will spin, not good)
         leftFront.setDirection(DcMotor.Direction.FORWARD);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setDirection(DcMotor.Direction.FORWARD);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
-        rightIntake.setDirection(DcMotor.Direction.REVERSE);
         grabber.setDirection(Servo.Direction.FORWARD);
         frontServosLeft.setDirection(Servo.Direction.REVERSE);
+        linearSlides.setDirection(DcMotor.Direction.FORWARD);
+
+
+        linearSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
 
@@ -65,33 +78,58 @@ public class Drive extends OpMode
 
         frontServosRight.resetDeviceConfigurationForOpMode();
         grabber.resetDeviceConfigurationForOpMode();
+        //intakeAdjust.resetDeviceConfigurationForOpMode();
+        intakeAdjustTwo.resetDeviceConfigurationForOpMode();
+
+    }
+
+    private void hold()
+    {
+
+    }
+
+    private void upOne(){
+
+        linearSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        linearSlides.setTargetPosition(2120);
+
+        linearSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        linearSlides.setPower(1);
+
+        while(linearSlides.isBusy())
+        {
+            //wait until target position is reached
+        }
+
+        linearSlides.setPower(0);
+
+        linearSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     //Code that Loops (runs continuously)
     @Override
     public void loop() {
 
+        if (gamepad2.dpad_up == true) {
+            upOne();
 
 
-        if (gamepad2.right_bumper == true)
-            horizontalSlides.setPower(1);
-        else if (gamepad2.left_bumper == true)
-            horizontalSlides.setPower(-1);
-        else
-            horizontalSlides.setPower(0);
+        }
+
+        leftIntake.setPower(-gamepad2.left_trigger);
+        rightIntake.setPower(gamepad2.right_trigger);
+        //intakeAdjust.setPower(gamepad2.left_trigger);
+        intakeAdjustTwo.setPower(-gamepad2.right_trigger);
+
+        horizontalSlides.setPower(gamepad2.right_stick_y*.5);
+        linearSlides.setPower((gamepad2.left_stick_y*.5) - .15);
 
         if (gamepad2.b == true)
             grabber.setPosition(Servo.MIN_POSITION);
         else
-            grabber.setPosition(Servo.MAX_POSITION);
-
-
-        if (gamepad2.dpad_up == true)
-            linearSlides.setPower(1);
-        else if (gamepad2.dpad_down == true)
-            linearSlides.setPower(-1);
-        else
-            linearSlides.setPower(0);
+            grabber.setPosition(0.5);
 
         if (gamepad2.a == true) {
             frontServosLeft.setPosition(Servo.MIN_POSITION);
@@ -102,8 +140,12 @@ public class Drive extends OpMode
             frontServosRight.setPosition(.50);
         }
 
-        leftIntake.setPower(gamepad2.left_trigger);
-        rightIntake.setPower(-gamepad2.right_trigger);
+        if (gamepad2.x == true) {
+            leftIntake.setPower(1);
+            rightIntake.setPower(-1);
+            intakeAdjustTwo.setPower(-1);
+            //intakeAdjust.setPower(-1);
+        }
 
 
         //It gets a little complex here, as we get into to Trigonometry
