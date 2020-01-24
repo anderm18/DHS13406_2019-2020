@@ -2,12 +2,50 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous (name="SAFEOUT_RIGHT", group= "1")
-public class AutoBlueRight extends LinearOpMode {
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+import org.openftc.easyopencv.OpenCvPipeline;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Autonomous(name= "CV AUTO", group="1")
+public class OPENCVAUTO extends LinearOpMode {
+    private ElapsedTime runtime = new ElapsedTime();
+
+    //0 means skystone, 1 means yellow stone
+    //-1 for debug, but we can keep it like this because if it works, it should change to either 0 or 255
+    private static int valMid = -1;
+    private static int valLeft = -1;
+    private static int valRight = -1;
+
+    private static float rectHeight = .6f / 8f;
+    private static float rectWidth = 1.5f / 8f;
+
+    private static float offsetX = 0f / 8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
+    private static float offsetY = -4f / -12f;//changing this moves the three rects and circles up or down, range: (-4, 4) not inclusive
+
+    private static float[] midPos = {4f / 8f + offsetX, 4f / 8f + offsetY};//0 = col, 1 = row
+    private static float[] leftPos = {2f / 8f + offsetX, 4f / 8f + offsetY};
+    private static float[] rightPos = {6f / 8f + offsetX, 4f / 8f + offsetY};
+    //moves all rectangles right or left by amount. units are in ratio to monitor
+
+    private final int rows = 640;
+    private final int cols = 480;
+
+    OpenCvCamera phoneCam;
 
     private DcMotor leftFront = null;
     private DcMotor rightFront = null;
@@ -15,8 +53,7 @@ public class AutoBlueRight extends LinearOpMode {
     private DcMotor rightBack = null;
 
 
-    public void  left(int ticks)
-    {
+    public void left(int ticks) {
         leftFront.setDirection(DcMotor.Direction.FORWARD);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
 
@@ -41,7 +78,7 @@ public class AutoBlueRight extends LinearOpMode {
         rightBack.setPower(.6);
         rightFront.setPower(.5);
 
-        while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
+        while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()) {
             //do nothing
         }
 
@@ -72,8 +109,7 @@ public class AutoBlueRight extends LinearOpMode {
 
     }
 
-    public void  right(int ticks)
-    {
+    public void right(int ticks) {
         //left is in
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -95,7 +131,7 @@ public class AutoBlueRight extends LinearOpMode {
         rightBack.setPower(.5);
         rightFront.setPower(.5);
 
-        while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
+        while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()) {
             //do nothing
         }
 
@@ -114,8 +150,7 @@ public class AutoBlueRight extends LinearOpMode {
 
     }
 
-    public void forwards(int ticks)
-    {
+    public void forwards(int ticks) {
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -136,7 +171,7 @@ public class AutoBlueRight extends LinearOpMode {
         rightBack.setPower(.5);
         rightFront.setPower(.5);
 
-        while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
+        while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()) {
             //do nothing
         }
 
@@ -151,8 +186,7 @@ public class AutoBlueRight extends LinearOpMode {
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void backwards(int ticks)
-    {
+    public void backwards(int ticks) {
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -173,7 +207,7 @@ public class AutoBlueRight extends LinearOpMode {
         rightBack.setPower(.5);
         rightFront.setPower(.5);
 
-        while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
+        while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()) {
             //do nothing
         }
 
@@ -189,32 +223,69 @@ public class AutoBlueRight extends LinearOpMode {
 
     }
 
-
-
     @Override
-    public void runOpMode(){
+    public void runOpMode() throws InterruptedException {
 
-        leftFront  = hardwareMap.get(DcMotor.class, "leftFront");
-        rightFront = hardwareMap.get(DcMotor.class, "rightFront");
-        leftBack = hardwareMap.get(DcMotor.class, "leftBack");
-        rightBack = hardwareMap.get(DcMotor.class, "rightBack");
-
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        rightBack.setDirection(DcMotor.Direction.FORWARD);
-        leftBack.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setDirection(DcMotor.Direction.FORWARD);
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        phoneCam = new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, cameraMonitorViewId);
+        phoneCam.openCameraDevice();//open camera
+        phoneCam.setPipeline(new StageSwitchingPipeline());//different stages
+        phoneCam.startStreaming(rows, cols, OpenCvCameraRotation.SIDEWAYS_RIGHT);//display on RC
+        //width, height
+        //width = height in this case, because camera is in portrait mode.
 
         waitForStart();
+        runtime.reset();
+       /* while (opModeIsActive()) {
+            telemetry.addData("Values", valLeft+"   "+valMid+"   "+valRight);
+            telemetry.addData("Height", rows);
+            telemetry.addData("Width", cols);
 
-        forwards(2250);
-        sleep(500);
-        left(3400);
-        sleep(500);
+            telemetry.update();
+//
+//            moveDistance(0.4, 700);
+
+        }
+*/
+        if (valMid == 0) {
+
+            leftFront.setPower(0);
+            leftBack.setPower(0);
+            rightBack.setPower(0);
+            rightFront.setPower(0);
+
+
+        } else {
+
+            leftFront.setPower(.2);
+            leftBack.setPower(.2);
+            rightBack.setPower(.2);
+            rightFront.setPower(.2);
+        }
+
+
     }
 
+    //detection pipeline
+    static class StageSwitchingPipeline extends OpenCvPipeline {
+        Mat yCbCrChan2Mat = new Mat();
+        Mat thresholdMat = new Mat();
+        Mat all = new Mat();
+        List<MatOfPoint> contoursList = new ArrayList<>();
+
+        @Override
+        public Mat processFrame(Mat input) {
+            return null;
+        }
+
+        enum Stage {//color difference. greyscale
+            detection,//includes outlines
+            THRESHOLD,//b&w
+            RAW_IMAGE,//displays raw view
+        }
+
+        private Stage stageToRenderToViewport = Stage.detection;
+        private Stage[] stages = Stage.values();
+
+    }
 }

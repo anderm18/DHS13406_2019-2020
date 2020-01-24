@@ -2,12 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Autonomous (name="SAFEOUT_RIGHT", group= "1")
-public class AutoBlueRight extends LinearOpMode {
+@Autonomous(name="SAFEIN_LEFT", group= "1")
+public class AutoRedSafeLeftIN extends LinearOpMode {
 
     private DcMotor leftFront = null;
     private DcMotor rightFront = null;
@@ -211,10 +209,11 @@ public class AutoBlueRight extends LinearOpMode {
 
         waitForStart();
 
-        forwards(2250);
+        forwards(250);
         sleep(500);
-        left(3400);
+        right(3400);
         sleep(500);
+        stop();
     }
 
 }

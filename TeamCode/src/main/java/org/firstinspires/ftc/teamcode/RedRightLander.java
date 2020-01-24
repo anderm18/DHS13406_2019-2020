@@ -5,14 +5,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous (name="SAFEOUT_RIGHT", group= "1")
-public class AutoBlueRight extends LinearOpMode {
+@Autonomous (name="PLATFORM_RedRight", group= "1")
+public class RedRightLander extends LinearOpMode {
 
     private DcMotor leftFront = null;
     private DcMotor rightFront = null;
     private DcMotor leftBack = null;
     private DcMotor rightBack = null;
+    private Servo frontServosLeft = null;
+    private Servo frontServosRight = null;
 
 
     public void  left(int ticks)
@@ -112,6 +115,18 @@ public class AutoBlueRight extends LinearOpMode {
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
 
+        leftFront.setPower(-.5);
+        leftBack.setPower(-.5);
+        rightBack.setPower(.5);
+        rightFront.setPower(.5);
+
+        sleep(70);
+
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+        rightFront.setPower(0);
+
     }
 
     public void forwards(int ticks)
@@ -189,6 +204,24 @@ public class AutoBlueRight extends LinearOpMode {
 
     }
 
+    public void turnRight(int time){
+
+        leftFront.setPower(.5);
+        rightBack.setPower(-.5);
+        leftBack.setPower(.5);
+        rightFront.setPower(-.5);
+
+        sleep(time);
+
+        leftFront.setPower(0);
+        rightBack.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+
+
+
+    }
+
 
 
     @Override
@@ -198,6 +231,9 @@ public class AutoBlueRight extends LinearOpMode {
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
         leftBack = hardwareMap.get(DcMotor.class, "leftBack");
         rightBack = hardwareMap.get(DcMotor.class, "rightBack");
+        frontServosLeft = hardwareMap.get(Servo.class, "frontServosLeft");
+        frontServosRight = hardwareMap.get(Servo.class, "frontServosRight");
+
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -208,13 +244,39 @@ public class AutoBlueRight extends LinearOpMode {
         rightBack.setDirection(DcMotor.Direction.FORWARD);
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
+        frontServosLeft.setDirection(Servo.Direction.REVERSE);
+
+        frontServosRight.resetDeviceConfigurationForOpMode();
+        frontServosLeft.resetDeviceConfigurationForOpMode();
 
         waitForStart();
 
+
+        frontServosLeft.setPosition(Servo.MIN_POSITION);
+        frontServosRight.setPosition(Servo.MIN_POSITION);
+        sleep(500);
         forwards(2250);
         sleep(500);
-        left(3400);
+        right(1000);
         sleep(500);
+        forwards(800);
+        sleep(500);
+        frontServosLeft.setPosition(.20);
+        frontServosRight.setPosition(.20);
+        sleep(500);
+        backwards(3500);
+        sleep(500);
+        frontServosLeft.setPosition(Servo.MIN_POSITION);
+        frontServosRight.setPosition(Servo.MIN_POSITION);
+        sleep(500);
+        left(2000);
+        sleep(500);
+        turnRight(150);
+        sleep(500);
+        left(3250);
+        sleep(500);
+        stop();
+
     }
 
 }
