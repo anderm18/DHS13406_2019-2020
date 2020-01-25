@@ -51,7 +51,6 @@ public class Drive extends OpMode
         rightBack = hardwareMap.get(DcMotor.class, "rightBack");
         rightIntake = hardwareMap.get(DcMotor.class, "rightIntake");
         leftIntake = hardwareMap.get(DcMotor.class, "leftIntake");
-        grabber = hardwareMap.get(Servo.class, "grabber");
         linearSlides = hardwareMap.get(DcMotor.class, "linearSlides");
         horizontalSlides = hardwareMap.get(DcMotor.class, "horizontalSlides");
         frontServosLeft = hardwareMap.get(Servo.class, "frontServosLeft");
@@ -218,7 +217,7 @@ public class Drive extends OpMode
         if (gamepad2.x == true) {
             leftIntake.setPower(1);
             rightIntake.setPower(-1);
-            intakeAdjustTwo.setPower(-1);
+            intakeAdjustTwo.setPower(1);
             //intakeAdjust.setPower(-1);
         }
 
