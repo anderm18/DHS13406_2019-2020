@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Locale;
 
 
-@Autonomous(name= "cvauto2", group="Sky autonomous")
-public class cvauto2 extends LinearOpMode {
+@Autonomous(name= "cvautored", group="Sky autonomous")
+public class cvautored extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     //0 means skystone, 1 means yellow stone
@@ -111,7 +111,7 @@ public class cvauto2 extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        right(200);
+        right(250);
         while (opModeIsActive()) {
             telemetry.addData("Values", valLeft+"   "+valMid+"   "+valRight);
             telemetry.addData("Height", rows);
@@ -119,10 +119,10 @@ public class cvauto2 extends LinearOpMode {
 
             telemetry.update();
 
-            leftFront.setPower(.2);
-            leftBack.setPower(.2);
-            rightFront.setPower(.2);
-            rightBack.setPower(.2);
+            leftFront.setPower(-.2);
+            leftBack.setPower(-.2);
+            rightFront.setPower(-.2);
+            rightBack.setPower(-.2);
 
             if (valMid == 0){
 
@@ -130,6 +130,7 @@ public class cvauto2 extends LinearOpMode {
                 telemetry.update();
 
                 break;
+
             }
 
         }
@@ -141,16 +142,12 @@ public class cvauto2 extends LinearOpMode {
 
         sleep(50);
 
-        forwards(250);
+        backwards(250);
         sleep(100);
 
         turnRight();
         sleep(100);
         intake();
-        sleep(200);
-
-        intakeAgain();
-
         sleep(200);
 
         leftIntake.setPower(-1);
@@ -159,14 +156,11 @@ public class cvauto2 extends LinearOpMode {
         leftIntake.setPower(0);
         rightIntake.setPower(0);
 
-        backwards(1925);
-        sleep(200);
+        backwards(725);
+        sleep(100);
 
-        turnRight();
+        turnLeft();
 
-        sleep(300);
-
-        long timeStart = System.nanoTime();
 
         //rf - lb -
         while (opModeIsActive()){
@@ -175,95 +169,58 @@ public class cvauto2 extends LinearOpMode {
                     String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
 
             telemetry.update();
-            leftFront.setPower(.4);
-            rightFront.setPower(.4);
+            leftFront.setPower(.5);
+            rightFront.setPower(.5);
             leftBack.setPower(.5);
-            rightBack.setPower(.4);
+            rightBack.setPower(.5);
 
             if (sensorDistance.getDistance(DistanceUnit.CM) <= 5){
 
                 break;
+
             }
         }
-
-        long timeEnd = System.nanoTime();
-
-        double time = ((timeEnd - timeStart)*.000000001);
-
-        if (time >=1.5 && time<= 2.8){
-
-            sleep(200);
-
-            forwards(200);
-
-            sleep(200);
-
-            leftIntake.setPower(1);
-            rightIntake.setPower(-1);
-            intakeAdjustTwo.setPower(1);
-
-            sleep(1200);
-
-            leftIntake.setPower(0);
-            rightIntake.setPower(0);
-            intakeAdjustTwo.setPower(0);
-
-            sleep(200);
-
-            backwardsFast(4700);
-
-            sleep(200);
-
-            right(600);
-
-            sleep(200);
-
-            turnLeft();
-
-            sleep(200);
-
-            intakeAgain();
-
-            sleep(200);
-
-            backwards(1250);
-
-            sleep(200);
-
-            turnRight();
-
-            sleep(200);
-
-            forwards(4700);
-
-            leftIntake.setPower(1);
-            rightIntake.setPower(-1);
-            intakeAdjustTwo.setPower(1);
-
-            sleep(1000);
-
-            leftIntake.setPower(0);
-            rightIntake.setPower(0);
-            intakeAdjustTwo.setPower(0);
+        sleep(200);
 
 
-            stop();
+        forwards(2750);
 
+        sleep(200);
 
+        turnRight();
 
+        sleep(200);
 
-        }
-/*
+        forwards(500);
+
+        sleep(500);
+
+        leftIntake.setPower(1);
+        rightIntake.setPower(-1);
+        intakeAdjustTwo.setPower(1);
+
+        sleep(2000);
+
+        leftIntake.setPower(0);
+        rightIntake.setPower(0);
+        intakeAdjustTwo.setPower(0);
+
+        sleep(500);
+
+        backwards(100);
+
+        sleep(200);
+
         while (opModeIsActive()){
 
             telemetry.addData("Distance (cm)",
                     String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
 
             telemetry.update();
-            leftFront.setPower(-.5);
+            leftFront.setPower(.5);
             rightFront.setPower(-.5);
             leftBack.setPower(-.5);
-            rightBack.setPower(-.5);
+            rightBack.setPower(.5);
 
             if (sensorDistance.getDistance(DistanceUnit.CM) <= 5){
 
@@ -271,7 +228,8 @@ public class cvauto2 extends LinearOpMode {
             }
         }
 
-        stop();*/
+        stop();
+
     }
 
     //detection pipeline
@@ -472,6 +430,7 @@ public class cvauto2 extends LinearOpMode {
 
     }
 
+
     public void  right(int ticks)
     {
         //left is in
@@ -490,10 +449,10 @@ public class cvauto2 extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftFront.setPower(.75);
-        leftBack.setPower(.75);
-        rightBack.setPower(.75);
-        rightFront.setPower(.75);
+        leftFront.setPower(.5);
+        leftBack.setPower(.5);
+        rightBack.setPower(.5);
+        rightFront.setPower(.5);
 
         while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
             //do nothing
@@ -531,10 +490,10 @@ public class cvauto2 extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftFront.setPower(.75);
-        leftBack.setPower(.75);
-        rightBack.setPower(.75);
-        rightFront.setPower(.75);
+        leftFront.setPower(.5);
+        leftBack.setPower(.5);
+        rightBack.setPower(.5);
+        rightFront.setPower(.5);
 
         while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
             //do nothing
@@ -568,10 +527,10 @@ public class cvauto2 extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftFront.setPower(.75);
-        leftBack.setPower(.75);
-        rightBack.setPower(.75);
-        rightFront.setPower(.75);
+        leftFront.setPower(.5);
+        leftBack.setPower(.5);
+        rightBack.setPower(.5);
+        rightFront.setPower(.5);
 
         while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
             //do nothing
@@ -606,10 +565,10 @@ public class cvauto2 extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftFront.setPower(.75);
-        leftBack.setPower(.75);
-        rightBack.setPower(.75);
-        rightFront.setPower(.75);
+        leftFront.setPower(.5);
+        leftBack.setPower(.5);
+        rightBack.setPower(.5);
+        rightFront.setPower(.5);
 
         while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
             //do nothing
@@ -643,10 +602,10 @@ public class cvauto2 extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftFront.setPower(.75);
-        leftBack.setPower(.75);
-        rightBack.setPower(.75);
-        rightFront.setPower(.75);
+        leftFront.setPower(.5);
+        leftBack.setPower(.5);
+        rightBack.setPower(.5);
+        rightFront.setPower(.5);
         leftIntake.setPower(-1);
         rightIntake.setPower(1);
 
@@ -665,6 +624,8 @@ public class cvauto2 extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
 
     }
 
@@ -675,20 +636,20 @@ public class cvauto2 extends LinearOpMode {
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftFront.setTargetPosition(-1550);
-        rightFront.setTargetPosition(1550);
-        leftBack.setTargetPosition(-1550);
-        rightBack.setTargetPosition(1550);
+        leftFront.setTargetPosition(-1450);
+        rightFront.setTargetPosition(1450);
+        leftBack.setTargetPosition(-1450);
+        rightBack.setTargetPosition(1450);
 
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftFront.setPower(.75);
-        leftBack.setPower(.75);
-        rightBack.setPower(.75);
-        rightFront.setPower(.75);
+        leftFront.setPower(.5);
+        leftBack.setPower(.5);
+        rightBack.setPower(.5);
+        rightFront.setPower(.5);
 
         while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
             //do nothing
@@ -705,167 +666,6 @@ public class cvauto2 extends LinearOpMode {
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void intakeAgain(){
 
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        leftFront.setTargetPosition(1200);
-        rightFront.setTargetPosition(1200);
-        leftBack.setTargetPosition(1200);
-        rightBack.setTargetPosition(1200);
-
-        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        leftFront.setPower(.75);
-        leftBack.setPower(.75);
-        rightBack.setPower(.75);
-        rightFront.setPower(.75);
-        leftIntake.setPower(-1);
-        rightIntake.setPower(1);
-
-        while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
-            //do nothing
-        }
-
-        leftFront.setPower(0);
-        leftBack.setPower(0);
-        rightBack.setPower(0);
-        rightFront.setPower(0);
-        leftIntake.setPower(0);
-        rightIntake.setPower(0);
-
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-
-    }
-
-    public void backwardsFast(int ticks)
-    {
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        leftFront.setTargetPosition(-ticks);
-        rightFront.setTargetPosition(-ticks);
-        leftBack.setTargetPosition(-ticks);
-        rightBack.setTargetPosition(-ticks);
-
-        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        leftFront.setPower(1);
-        leftBack.setPower(1);
-        rightBack.setPower(1);
-        rightFront.setPower(1);
-
-        while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
-            //do nothing
-        }
-
-        leftFront.setPower(0);
-        leftBack.setPower(0);
-        rightBack.setPower(0);
-        rightFront.setPower(0);
-
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-    }
-
-    public void intakeShort(){
-
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        leftFront.setTargetPosition(300);
-        rightFront.setTargetPosition(300);
-        leftBack.setTargetPosition(300);
-        rightBack.setTargetPosition(300);
-
-        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        leftFront.setPower(.75);
-        leftBack.setPower(.75);
-        rightBack.setPower(.75);
-        rightFront.setPower(.75);
-        leftIntake.setPower(-1);
-        rightIntake.setPower(1);
-
-        while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
-            //do nothing
-        }
-
-        leftFront.setPower(0);
-        leftBack.setPower(0);
-        rightBack.setPower(0);
-        rightFront.setPower(0);
-        leftIntake.setPower(0);
-        rightIntake.setPower(0);
-
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-
-    }
-
-    public void turnRightFar(){
-
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        leftFront.setTargetPosition(1650);
-        rightFront.setTargetPosition(-1650);
-        leftBack.setTargetPosition(1650);
-        rightBack.setTargetPosition(-1650);
-
-        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        leftFront.setPower(.75);
-        leftBack.setPower(.75);
-        rightBack.setPower(.75);
-        rightFront.setPower(.75);
-
-        while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
-            //do nothing
-        }
-
-        leftFront.setPower(0);
-        leftBack.setPower(0);
-        rightBack.setPower(0);
-        rightFront.setPower(0);
-
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
 
 }

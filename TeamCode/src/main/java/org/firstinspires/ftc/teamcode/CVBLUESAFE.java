@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Locale;
 
 
-@Autonomous(name= "cvauto2", group="Sky autonomous")
-public class cvauto2 extends LinearOpMode {
+@Autonomous(name= "CVBLUESAFE", group="Sky autonomous")
+public class CVBLUESAFE extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     //0 means skystone, 1 means yellow stone
@@ -119,10 +119,10 @@ public class cvauto2 extends LinearOpMode {
 
             telemetry.update();
 
-            leftFront.setPower(.2);
-            leftBack.setPower(.2);
-            rightFront.setPower(.2);
-            rightBack.setPower(.2);
+            leftFront.setPower(.4);
+            leftBack.setPower(.4);
+            rightFront.setPower(.4);
+            rightBack.setPower(.4);
 
             if (valMid == 0){
 
@@ -162,7 +162,7 @@ public class cvauto2 extends LinearOpMode {
         backwards(1925);
         sleep(200);
 
-        turnRight();
+        turnRightFar();
 
         sleep(300);
 
@@ -180,17 +180,40 @@ public class cvauto2 extends LinearOpMode {
             leftBack.setPower(.5);
             rightBack.setPower(.4);
 
-            if (sensorDistance.getDistance(DistanceUnit.CM) <= 5){
+            if (sensorDistance.getDistance(DistanceUnit.CM) <= 5.5){
 
                 break;
             }
         }
 
+        sleep(200);
+
+        forwards(200);
+
+        sleep(200);
+
+        forwards(1000);
+
+        sleep(200);
+        leftIntake.setPower(1);
+        rightIntake.setPower(-1);
+        intakeAdjustTwo.setPower(1);
+        grabber.setPosition(Servo.MIN_POSITION);
+
+        sleep(1200);
+
+        leftIntake.setPower(0);
+        rightIntake.setPower(0);
+        intakeAdjustTwo.setPower(0);
+
+        backwards(1000);
+
+
         long timeEnd = System.nanoTime();
 
         double time = ((timeEnd - timeStart)*.000000001);
 
-        if (time >=1.5 && time<= 2.8){
+        /*if (time >=1.5 && time<= 2.8){
 
             sleep(200);
 

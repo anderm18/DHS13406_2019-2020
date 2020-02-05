@@ -55,6 +55,7 @@ public class Drive extends OpMode
         horizontalSlides = hardwareMap.get(DcMotor.class, "horizontalSlides");
         frontServosLeft = hardwareMap.get(Servo.class, "frontServosLeft");
         frontServosRight = hardwareMap.get(Servo.class, "frontServosRight");
+        grabber = hardwareMap.get(Servo.class, "grabber");
         //intakeAdjust = hardwareMap.get(CRServo.class, "intakeAdjust");
         intakeAdjustTwo = hardwareMap.get(CRServo.class, "intakeAdjustTwo");
     //    grabber2 = hardwareMap.get(Servo.class, "grabber2");
@@ -182,6 +183,7 @@ public class Drive extends OpMode
 
         }
 
+
         if (gamepad1.left_bumper == true){
             adjustBrakeLeft();
 
@@ -221,9 +223,25 @@ public class Drive extends OpMode
             //intakeAdjust.setPower(-1);
         }
 
+        //slow mode for foundation movers
+        if (gamepad1.a == true){
+
+            leftFront.setPower(-.4);
+            leftBack.setPower(-.4);
+            rightFront.setPower(-.4);
+            rightBack.setPower(-.4);
+        }
+        if (gamepad1.y == true){
+
+            leftFront.setPower(.4);
+            leftBack.setPower(.4);
+            rightFront.setPower(.4);
+            rightBack.setPower(.4);
+        }
 
 
-        if (gamepad1.right_bumper == false && gamepad1.left_bumper == false) {
+
+        if (gamepad1.right_bumper == false && gamepad1.left_bumper == false && gamepad1.a == false && gamepad1.y == false) {
 
             //It gets a little complex here, as we get into to Trigonometry
             double hyp = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
