@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Locale;
 
 
-@Autonomous(name= "CVBLUESAFE", group="Sky autonomous")
-public class CVBLUESAFE extends LinearOpMode {
+@Autonomous(name= "CVREDWORKING", group="Sky autonomous")
+public class CVREDWORKING extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     //0 means skystone, 1 means yellow stone
@@ -119,10 +119,10 @@ public class CVBLUESAFE extends LinearOpMode {
 
             telemetry.update();
 
-            leftFront.setPower(.4);
-            leftBack.setPower(.4);
-            rightFront.setPower(.4);
-            rightBack.setPower(.4);
+            leftFront.setPower(-.4);
+            leftBack.setPower(-.4);
+            rightFront.setPower(-.4);
+            rightBack.setPower(-.4);
 
             if (valMid == 0){
 
@@ -141,13 +141,13 @@ public class CVBLUESAFE extends LinearOpMode {
 
         sleep(50);
 
-        forwards(250);
-        sleep(50);
+        backwards(150);
+        sleep(100);
 
         turnRight();
-        sleep(50);
+        sleep(100);
         intake();
-
+        sleep(200);
 
         intakeAgain();
 
@@ -162,7 +162,7 @@ public class CVBLUESAFE extends LinearOpMode {
         backwards(1925);
         sleep(200);
 
-        turnRightFar();
+        turnLeft();
 
         sleep(300);
 
@@ -177,7 +177,7 @@ public class CVBLUESAFE extends LinearOpMode {
             telemetry.update();
             leftFront.setPower(.4);
             rightFront.setPower(.4);
-            leftBack.setPower(.5);
+            leftBack.setPower(.4);
             rightBack.setPower(.4);
 
             if (sensorDistance.getDistance(DistanceUnit.CM) <= 5.5){
@@ -214,86 +214,52 @@ public class CVBLUESAFE extends LinearOpMode {
         double time = ((timeEnd - timeStart)*.000000001);
 
         /*if (time >=1.5 && time<= 2.8){
-
             sleep(200);
-
             forwards(200);
-
             sleep(200);
-
             leftIntake.setPower(1);
             rightIntake.setPower(-1);
             intakeAdjustTwo.setPower(1);
-
             sleep(1200);
-
             leftIntake.setPower(0);
             rightIntake.setPower(0);
             intakeAdjustTwo.setPower(0);
-
             sleep(200);
-
             backwardsFast(4700);
-
             sleep(200);
-
             right(600);
-
             sleep(200);
-
             turnLeft();
-
             sleep(200);
-
             intakeAgain();
-
             sleep(200);
-
             backwards(1250);
-
             sleep(200);
-
             turnRight();
-
             sleep(200);
-
             forwards(4700);
-
             leftIntake.setPower(1);
             rightIntake.setPower(-1);
             intakeAdjustTwo.setPower(1);
-
             sleep(1000);
-
             leftIntake.setPower(0);
             rightIntake.setPower(0);
             intakeAdjustTwo.setPower(0);
-
-
             stop();
-
-
-
-
         }
 /*
         while (opModeIsActive()){
-
             telemetry.addData("Distance (cm)",
                     String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-
             telemetry.update();
             leftFront.setPower(-.5);
             rightFront.setPower(-.5);
             leftBack.setPower(-.5);
             rightBack.setPower(-.5);
-
             if (sensorDistance.getDistance(DistanceUnit.CM) <= 5){
-
                 break;
             }
         }
-
         stop();*/
     }
 

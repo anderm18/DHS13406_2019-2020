@@ -214,86 +214,52 @@ public class CVREDSAFE extends LinearOpMode {
         double time = ((timeEnd - timeStart)*.000000001);
 
         /*if (time >=1.5 && time<= 2.8){
-
             sleep(200);
-
             forwards(200);
-
             sleep(200);
-
             leftIntake.setPower(1);
             rightIntake.setPower(-1);
             intakeAdjustTwo.setPower(1);
-
             sleep(1200);
-
             leftIntake.setPower(0);
             rightIntake.setPower(0);
             intakeAdjustTwo.setPower(0);
-
             sleep(200);
-
             backwardsFast(4700);
-
             sleep(200);
-
             right(600);
-
             sleep(200);
-
             turnLeft();
-
             sleep(200);
-
             intakeAgain();
-
             sleep(200);
-
             backwards(1250);
-
             sleep(200);
-
             turnRight();
-
             sleep(200);
-
             forwards(4700);
-
             leftIntake.setPower(1);
             rightIntake.setPower(-1);
             intakeAdjustTwo.setPower(1);
-
             sleep(1000);
-
             leftIntake.setPower(0);
             rightIntake.setPower(0);
             intakeAdjustTwo.setPower(0);
-
-
             stop();
-
-
-
-
         }
 /*
         while (opModeIsActive()){
-
             telemetry.addData("Distance (cm)",
                     String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-
             telemetry.update();
             leftFront.setPower(-.5);
             rightFront.setPower(-.5);
             leftBack.setPower(-.5);
             rightBack.setPower(-.5);
-
             if (sensorDistance.getDistance(DistanceUnit.CM) <= 5){
-
                 break;
             }
         }
-
         stop();*/
     }
 

@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.hardware.Sensor;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -14,9 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
-import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
-import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -29,8 +25,8 @@ import java.util.List;
 import java.util.Locale;
 
 
-@Autonomous(name= "CVBLUESAFE", group="Sky autonomous")
-public class CVBLUESAFE extends LinearOpMode {
+@Autonomous(name= "ParabolicDriveTests", group="Sky autonomous")
+public class ParabolicDriveTests extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     //0 means skystone, 1 means yellow stone
@@ -111,190 +107,14 @@ public class CVBLUESAFE extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        right(200);
-        while (opModeIsActive()) {
-            telemetry.addData("Values", valLeft+"   "+valMid+"   "+valRight);
-            telemetry.addData("Height", rows);
-            telemetry.addData("Width", cols);
+        forwards(5000);
+        backwards(8000);
+        forwards(8000);
+        backwards(4000);
+        forwards(4000);
 
-            telemetry.update();
 
-            leftFront.setPower(.4);
-            leftBack.setPower(.4);
-            rightFront.setPower(.4);
-            rightBack.setPower(.4);
 
-            if (valMid == 0){
-
-                telemetry.addLine("SkyStone Detected!");
-                telemetry.update();
-
-                break;
-            }
-
-        }
-
-        leftFront.setPower(0);
-        leftBack.setPower(0);
-        rightFront.setPower(0);
-        rightBack.setPower(0);
-
-        sleep(50);
-
-        forwards(250);
-        sleep(50);
-
-        turnRight();
-        sleep(50);
-        intake();
-
-
-        intakeAgain();
-
-        sleep(200);
-
-        leftIntake.setPower(-1);
-        rightIntake.setPower(1);
-        sleep(500);
-        leftIntake.setPower(0);
-        rightIntake.setPower(0);
-
-        backwards(1925);
-        sleep(200);
-
-        turnRightFar();
-
-        sleep(300);
-
-        long timeStart = System.nanoTime();
-
-        //rf - lb -
-        while (opModeIsActive()){
-
-            telemetry.addData("Distance (cm)",
-                    String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-
-            telemetry.update();
-            leftFront.setPower(.4);
-            rightFront.setPower(.4);
-            leftBack.setPower(.5);
-            rightBack.setPower(.4);
-
-            if (sensorDistance.getDistance(DistanceUnit.CM) <= 5.5){
-
-                break;
-            }
-        }
-
-        sleep(200);
-
-        forwards(200);
-
-        sleep(200);
-
-        forwards(1000);
-
-        sleep(200);
-        leftIntake.setPower(1);
-        rightIntake.setPower(-1);
-        intakeAdjustTwo.setPower(1);
-        grabber.setPosition(Servo.MIN_POSITION);
-
-        sleep(1200);
-
-        leftIntake.setPower(0);
-        rightIntake.setPower(0);
-        intakeAdjustTwo.setPower(0);
-
-        backwards(1000);
-
-
-        long timeEnd = System.nanoTime();
-
-        double time = ((timeEnd - timeStart)*.000000001);
-
-        /*if (time >=1.5 && time<= 2.8){
-
-            sleep(200);
-
-            forwards(200);
-
-            sleep(200);
-
-            leftIntake.setPower(1);
-            rightIntake.setPower(-1);
-            intakeAdjustTwo.setPower(1);
-
-            sleep(1200);
-
-            leftIntake.setPower(0);
-            rightIntake.setPower(0);
-            intakeAdjustTwo.setPower(0);
-
-            sleep(200);
-
-            backwardsFast(4700);
-
-            sleep(200);
-
-            right(600);
-
-            sleep(200);
-
-            turnLeft();
-
-            sleep(200);
-
-            intakeAgain();
-
-            sleep(200);
-
-            backwards(1250);
-
-            sleep(200);
-
-            turnRight();
-
-            sleep(200);
-
-            forwards(4700);
-
-            leftIntake.setPower(1);
-            rightIntake.setPower(-1);
-            intakeAdjustTwo.setPower(1);
-
-            sleep(1000);
-
-            leftIntake.setPower(0);
-            rightIntake.setPower(0);
-            intakeAdjustTwo.setPower(0);
-
-
-            stop();
-
-
-
-
-        }
-/*
-        while (opModeIsActive()){
-
-            telemetry.addData("Distance (cm)",
-                    String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-
-            telemetry.update();
-            leftFront.setPower(-.5);
-            rightFront.setPower(-.5);
-            leftBack.setPower(-.5);
-            rightBack.setPower(-.5);
-
-            if (sensorDistance.getDistance(DistanceUnit.CM) <= 5){
-
-                break;
-            }
-        }
-
-        stop();*/
     }
 
     //detection pipeline
@@ -554,19 +374,56 @@ public class CVBLUESAFE extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftFront.setPower(.75);
-        leftBack.setPower(.75);
-        rightBack.setPower(.75);
-        rightFront.setPower(.75);
+        leftFront.setPower(.2);
+        leftBack.setPower(.2);
+        rightBack.setPower(.2);
+        rightFront.setPower(.2);
 
         while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
-            //do nothing
+
+            while (leftFront.getCurrentPosition() < (ticks/2) && leftBack.getCurrentPosition() < (ticks/2) && rightFront.getCurrentPosition() < (ticks/2) && rightBack.getCurrentPosition() < (ticks/2) && leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
+
+                leftFront.setPower((5 * ((double) leftFront.getCurrentPosition()/(double) ticks) + .2));
+                leftBack.setPower((5 * ((double) leftBack.getCurrentPosition()/(double) ticks) + .2));
+                rightFront.setPower((5 * ((double) rightFront.getCurrentPosition()/(double) ticks) + .2));
+                rightBack.setPower((5 * ((double) rightBack.getCurrentPosition()/(double) ticks) + .2));
+
+                telemetry.addData("leftFront", leftFront.getPower());
+                telemetry.addData("leftBack", leftBack.getPower());
+                telemetry.addData("rightFront", rightFront.getPower());
+                telemetry.addData("rightBack", rightBack.getPower());
+                telemetry.update();
+
+            }
+
+            while (leftFront.getCurrentPosition() >= (ticks/2) && leftBack.getCurrentPosition() >= (ticks/2) && rightFront.getCurrentPosition() >= (ticks/2) && rightBack.getCurrentPosition() >= (ticks/2) && leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
+
+                leftFront.setPower(-3 * (((double) leftFront.getCurrentPosition()/(double) ticks) - 1) + .1);
+                leftBack.setPower(-3 * (((double) leftBack.getCurrentPosition()/(double) ticks) - 1) + .1);
+                rightFront.setPower(-3 * (((double) rightFront.getCurrentPosition()/(double) ticks) - 1) + .1);
+                rightBack.setPower(-3 * (((double) rightBack.getCurrentPosition()/(double) ticks) - 1) + .1);
+
+                telemetry.addData("leftFront", leftFront.getPower());
+                telemetry.addData("leftBack", leftBack.getPower());
+                telemetry.addData("rightFront", rightFront.getPower());
+                telemetry.addData("rightBack", rightBack.getPower());
+                telemetry.update();
+            }
+
+
+
         }
 
         leftFront.setPower(0);
         leftBack.setPower(0);
         rightBack.setPower(0);
         rightFront.setPower(0);
+
+        telemetry.addData("leftFront", leftFront.getPower());
+        telemetry.addData("leftBack", leftBack.getPower());
+        telemetry.addData("rightFront", rightFront.getPower());
+        telemetry.addData("rightBack", rightBack.getPower());
+        telemetry.update();
 
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -591,13 +448,44 @@ public class CVBLUESAFE extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftFront.setPower(.75);
-        leftBack.setPower(.75);
-        rightBack.setPower(.75);
-        rightFront.setPower(.75);
+        leftFront.setPower(.2);
+        leftBack.setPower(.2);
+        rightBack.setPower(.2);
+        rightFront.setPower(.2);
 
         while (leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
-            //do nothing
+
+            while (leftFront.getCurrentPosition() < (ticks/2) && leftBack.getCurrentPosition() < (ticks/2) && rightFront.getCurrentPosition() < (ticks/2) && rightBack.getCurrentPosition() < (ticks/2) && leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
+
+                leftFront.setPower((5 * ((double) -leftFront.getCurrentPosition()/(double) ticks) + .2));
+                leftBack.setPower((5 * ((double) -leftBack.getCurrentPosition()/(double) ticks) + .2));
+                rightFront.setPower((5 * ((double) -rightFront.getCurrentPosition()/(double) ticks) + .2));
+                rightBack.setPower((5 * ((double) -rightBack.getCurrentPosition()/(double) ticks) + .2));
+
+                telemetry.addData("leftFront", leftFront.getPower());
+                telemetry.addData("leftBack", leftBack.getPower());
+                telemetry.addData("rightFront", rightFront.getPower());
+                telemetry.addData("rightBack", rightBack.getPower());
+                telemetry.update();
+
+            }
+
+            while (leftFront.getCurrentPosition() >= (ticks/2) && leftBack.getCurrentPosition() >= (ticks/2) && rightFront.getCurrentPosition() >= (ticks/2) && rightBack.getCurrentPosition() >= (ticks/2) && leftFront.isBusy() && leftBack.isBusy() && rightFront.isBusy() && rightBack.isBusy()){
+
+                leftFront.setPower(-3 * (((double) -leftFront.getCurrentPosition()/(double) ticks) - 1) + .1);
+                leftBack.setPower(-3 * (((double) -leftBack.getCurrentPosition()/(double) ticks) - 1) + .1);
+                rightFront.setPower(-3 * (((double) -rightFront.getCurrentPosition()/(double) ticks) - 1) + .1);
+                rightBack.setPower(-3 * (((double) -rightBack.getCurrentPosition()/(double) ticks) - 1) + .1);
+
+                telemetry.addData("leftFront", leftFront.getPower());
+                telemetry.addData("leftBack", leftBack.getPower());
+                telemetry.addData("rightFront", rightFront.getPower());
+                telemetry.addData("rightBack", rightBack.getPower());
+                telemetry.update();
+            }
+
+
+
         }
 
         leftFront.setPower(0);

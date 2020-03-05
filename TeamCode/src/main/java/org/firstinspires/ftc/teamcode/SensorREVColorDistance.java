@@ -93,11 +93,11 @@ public class SensorREVColorDistance extends LinearOpMode {
     public void runOpMode() {
 
         // get a reference to the color sensor.
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
-        sensorColor2 = hardwareMap.get(ColorSensor.class, "sensor_color_distance2");
+        sensorColor = hardwareMap.get(ColorSensor.class, "distanceLeft");
+        sensorColor2 = hardwareMap.get(ColorSensor.class, "distanceRight");
         // get a reference to the distance sensor that shares the same name.
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
-        sensorDistance2 = hardwareMap.get(DistanceSensor.class, "sensor_color_distance2");
+        sensorDistance = hardwareMap.get(DistanceSensor.class, "distanceLeft");
+        sensorDistance2 = hardwareMap.get(DistanceSensor.class, "distanceRight");
 
         // hsvValues is an array that will hold the hue, saturation, and value information.
         float hsvValues[] = {0F, 0F, 0F};

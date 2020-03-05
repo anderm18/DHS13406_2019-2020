@@ -37,6 +37,7 @@ public class Drive extends OpMode
   //  private Servo grabber2 = null;
     private DistanceSensor distanceLeft = null;
     private DistanceSensor distanceRight = null;
+    private CRServo tape = null;
 
     //Once the START Button is pressed
     @Override
@@ -61,6 +62,7 @@ public class Drive extends OpMode
     //    grabber2 = hardwareMap.get(Servo.class, "grabber2");
         distanceLeft = hardwareMap.get(DistanceSensor.class, "distanceLeft");
         distanceRight = hardwareMap.get(DistanceSensor.class, "distanceRight");
+        tape = hardwareMap.get(CRServo.class, "tape");
 
 
         //set diretion of motors (if left and right always turn clockwise, then the robot will spin, not good)
@@ -94,8 +96,8 @@ public class Drive extends OpMode
         //intakeAdjust.resetDeviceConfigurationForOpMode();
         intakeAdjustTwo.resetDeviceConfigurationForOpMode();
       //  grabber2.resetDeviceConfigurationForOpMode();
-        frontServosRight.resetDeviceConfigurationForOpMode();
-        frontServosLeft.resetDeviceConfigurationForOpMode();
+
+        tape.resetDeviceConfigurationForOpMode();
 
     }
 
@@ -177,6 +179,22 @@ public class Drive extends OpMode
     @Override
     public void loop() {
 
+
+        while (gamepad1.b == true){
+
+            tape.setPower(1);
+        }
+
+        while (gamepad1.dpad_down == true){
+
+            tape.setPower(-1);
+        }
+
+        if(gamepad1.dpad_up == true){
+
+            tape.setPower(0);
+        }
+
         if (gamepad1.right_bumper == true){
             adjustBrakeRight();
 
@@ -208,11 +226,11 @@ public class Drive extends OpMode
             grabber.setPosition(0.5);
 
         if (gamepad2.a == true) {
-            frontServosLeft.setPosition(Servo.MIN_POSITION);
+            frontServosLeft.setPosition(.1);
             frontServosRight.setPosition(Servo.MIN_POSITION);
         }
         else if (gamepad2.y == true) {
-            frontServosLeft.setPosition(.20);
+            frontServosLeft.setPosition(.15);
             frontServosRight.setPosition(.20);
         }
 
@@ -221,6 +239,11 @@ public class Drive extends OpMode
             rightIntake.setPower(-1);
             intakeAdjustTwo.setPower(1);
             //intakeAdjust.setPower(-1);
+        }
+        else {
+            leftIntake.setPower(0);
+            rightIntake.setPower(0);
+            intakeAdjustTwo.setPower(0);
         }
 
         //slow mode for foundation movers
